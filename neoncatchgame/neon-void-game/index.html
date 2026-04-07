@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Neon Catch: Hyper-Commerce</title>
+    <link rel="icon" type="image/svg+xml" href="favicon.svg">
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;700;900&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div id="game-container">
+        <canvas id="gameCanvas"></canvas>
+        
+        <!-- HUD Overlay -->
+        <div id="hud">
+            <div id="stats">
+                <div id="score-container">SCORE: <span id="score">0</span></div>
+                <div id="combo-container">COMBO: <span id="combo">0</span></div>
+                <div id="streak-container" class="hidden">MISS STREAK: <span id="streak">0</span>/<span id="streak-limit">0</span></div>
+                <div id="gold-container">GOLD: <span id="gold-amount">0</span></div>
+            </div>
+            <div id="center-hud">
+                <div id="level-display">LEVEL 1</div>
+                <div id="timer-display">TIME: 240s</div>
+                <div id="timer-bar-container">
+                    <div id="timer-bar"></div>
+                </div>
+                <div id="game-notification" class="hidden">SONRAKİ LEVEL AÇILDI!</div>
+                <div id="ability-slots">
+                    <div class="ability-slot" id="slot-magnet" title="Magnet [1]">🧲 <span class="count">0</span></div>
+                    <div class="ability-slot" id="slot-freeze" title="Time Freeze [2]">❄️ <span class="count">0</span></div>
+                </div>
+            </div>
+            <div id="right-hud">
+                <div id="health-bar-container">
+                    <div id="health-bar"></div>
+                </div>
+                <button id="music-toggle">🔊 MUSIC: ON</button>
+            </div>
+        </div>
+
+        <!-- Screens -->
+        <div id="menu-screen" class="overlay">
+            <h1>NEON CATCH</h1>
+            <div id="menu-stats">
+                <span>HIGH SCORE: <span id="high-score">0</span></span> | 
+                <span>TOTAL GOLD: <span id="total-gold">0</span></span>
+            </div>
+            
+            <div class="tab-container">
+                <button class="tab-btn active" data-tab="levels">SEVİYELER</button>
+                <button class="tab-btn" data-tab="shop">MAĞAZA</button>
+                <button class="tab-btn" data-tab="rules">KURALLAR</button>
+            </div>
+
+            <div id="levels-container" class="tab-content">
+                <button class="lvl-btn" data-lvl="1">LEVEL 1<br><small>HEDEF: 1,000</small></button>
+                <button class="lvl-btn locked" data-lvl="2">LEVEL 2<br><small>HEDEF: 2,000</small></button>
+                <button class="lvl-btn locked" data-lvl="3">LEVEL 3<br><small>HEDEF: 5,000</small></button>
+                <button class="lvl-btn locked" data-lvl="4">LEVEL 4<br><small>HEDEF: 10,000</small></button>
+                <button class="lvl-btn locked" data-lvl="5">LEVEL 5<br><small>HEDEF: 17,000</small></button>
+            </div>
+
+            <div id="shop-container" class="tab-content hidden">
+                <div class="shop-item" data-item="magnet">
+                    <div class="item-icon">🧲</div>
+                    <div class="item-info">
+                        <h3>Mıknatıs</h3>
+                        <p>Parçaları kendine çeker (10s)</p>
+                        <button class="buy-btn" data-cost="5000">5,000 GOLD</button>
+                    </div>
+                </div>
+                <div class="shop-item" data-item="freeze">
+                    <div class="item-icon">❄️</div>
+                    <div class="item-info">
+                        <h3>Zaman Durdurma</h3>
+                        <p>Zamanı ve parçaları dondurur (5s)</p>
+                        <button class="buy-btn" data-cost="5000">5,000 GOLD</button>
+                    </div>
+                </div>
+            </div>
+            
+            <div id="rules-container" class="tab-content hidden">
+                <div class="rules-box">
+                    <section>
+                        <h3>Oyun Kuralları</h3>
+                        <ul class="rules-list">
+                            <li><strong>Puan Kazan:</strong> Geometrik şekilleri toplayarak puan arttır.</li>
+                            <li><strong>Hasar Alma:</strong> Kırmızı X shapes çarparsan can ve puan kaybedersin.</li>
+                            <li><strong>Şekil Kaçırma:</strong> Şekilleri kaçırmak can götürür.</li>
+                            <li><strong>Altınlar:</strong> Level 2 ve üzerinde altın gelir. Daha çok altın için seviye atla!</li>
+                        </ul>
+                    </section>
+                    <div class="shortcuts-section">
+                        <h3>Kısayollar</h3>
+                        <div class="shortcuts-grid">
+                            <div class="shortcut"><span>[1]</span> Mıknatıs</div>
+                            <div class="shortcut"><span>[2]</span> Zaman Dondurma</div>
+                            <div class="shortcut"><span>[TAB]</span> Ana Menüye Dön</div>
+                            <div class="shortcut"><span>[ESC]</span> Oyunu Kapat</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="controls-hint">
+                <span>[1] Mıknatıs | [2] Zaman Durdurma | [ESC] Çıkış</span>
+            </div>
+        </div>
+
+        <div id="game-over-screen" class="overlay hidden">
+            <h1 id="over-title">OYUN BİTTİ</h1>
+            <p>Score: <span id="final-score">0</span></p>
+            <p>Earned Gold: <span id="earned-gold">0</span></p>
+            <p id="unlock-msg"></p>
+            <p style="margin-top: 20px; color: #00f3ff; font-weight: bold;">[TAB] ANA MENÜYE DÖN</p>
+            <button id="menu-btn" class="hidden">MENÜYE DÖN</button>
+        </div>
+    </div>
+
+    <audio id="bg-music" loop>
+        <source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3" type="audio/mpeg">
+    </audio>
+
+    <script src="game.js"></script>
+</body>
+</html>

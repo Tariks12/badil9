@@ -1,0 +1,17 @@
+<svg width="512" height="512" viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <filter id="glow">
+      <feGaussianBlur stdDeviation="10" result="coloredBlur"/>
+      <feMerge>
+        <feMergeNode in="coloredBlur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+  </defs>
+  <rect width="512" height="512" fill="#050510" rx="128"/>
+  <path d="M156 200V312C156 367.228 200.772 412 256 412C311.228 412 356 367.228 356 312V200H306V312C306 339.614 283.614 362 256 362C228.386 362 206 339.614 206 312V200H156Z" fill="#00f3ff" filter="url(#glow)"/>
+  <rect x="156" y="160" width="50" height="60" fill="#ff00ff" filter="url(#glow)"/>
+  <rect x="306" y="160" width="50" height="60" fill="#ff00ff" filter="url(#glow)"/>
+  <polygon points="400,100 440,140 400,180" fill="#00f3ff" filter="url(#glow)"/>
+  <circle cx="80" cy="120" r="25" fill="#ff00ff" filter="url(#glow)"/>
+</svg>
